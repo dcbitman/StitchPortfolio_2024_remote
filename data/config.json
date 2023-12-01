@@ -1,0 +1,60 @@
+{
+    "settings": [
+      {
+        "provider": "zoneedit",
+        "domain": "ruestitch.info",
+        "host": "@",
+        "username": "notstitch",
+        "token": "3BEB7E78E5A86E45",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      },
+      {
+        "provider": "zoneedit",
+        "domain": "ruestitch.info",
+        "host": "www",
+        "username": "notstitch",
+        "token": "3BEB7E78E5A86E45",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      },
+      {
+        "provider": "zoneedit",
+        "domain": "ruestitch.info",
+        "host": "*",
+        "username": "notstitch",
+        "token": "3BEB7E78E5A86E45",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      },
+
+      {
+        "provider": "zoneedit",
+        "domain": "stitch.rocks",
+        "host": "@",
+        "username": "@ruestitch",
+        "token": "83B8C96AB559EF65",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      },
+      {
+        "provider": "zoneedit",
+        "domain": "stitch.rocks",
+        "host": "www",
+        "username": "@ruestitch",
+        "token": "83B8C96AB559EF65",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      },
+      {
+        "provider": "zoneedit",
+        "domain": "stitch.rocks",
+        "host": "*",
+        "username": "@ruestitch",
+        "token": "83B8C96AB559EF65",
+        "ip_version": "ipv4",
+        "provider_ip": true
+      }
+
+    ]
+}
