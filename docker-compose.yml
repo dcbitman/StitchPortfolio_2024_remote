@@ -1,0 +1,90 @@
+version: "3.8"
+
+services:
+
+  traefik:
+    image: "traefik"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=ruestitch@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  ddns-updater:
+    image: qmcgaw/ddns-updater
+    container_name: ddns-updater
+    network_mode: bridge
+    ports:
+      - 8000:8000/tcp
+    volumes:
+      - ./data:/updater/data
+    environment:
+      - CONFIG=
+      - PERIOD=10m
+      - UPDATE_COOLDOWN_PERIOD=10m
+      - PUBLICIP_FETCHERS=all
+      - PUBLICIP_HTTP_PROVIDERS=all
+      - PUBLICIPV4_HTTP_PROVIDERS=all
+      - PUBLICIPV6_HTTP_PROVIDERS=all
+      - PUBLICIP_DNS_PROVIDERS=all
+      - PUBLICIP_DNS_TIMEOUT=3s
+      - HTTP_TIMEOUT=10s
+
+      # Web UI
+      - LISTENING_PORT=8000
+      - ROOT_URL=/
+
+      # Backup
+      - BACKUP_PERIOD=0 # 0 to disable
+      - BACKUP_DIRECTORY=/updater/data
+
+      # Other
+      - LOG_LEVEL=debug
+      - LOG_CALLER=hidden
+      - SHOUTRRR_ADDRESSES=
+    restart: always
+
+  # whoami:
+  #   image: "traefik/whoami"
+  #   container_name: "whoami"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.whoami.rule=Host(`whoami.ruestitch.info`)"
+  #     - "traefik.http.routers.whoami.entrypoints=websecure"
+  #     - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+
+  siteone:
+    image: "httpd:latest"
+    container_name: siteone
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.siteone.rule=Host(`ruestitch.info`,`www.ruestitch.info`)"
+      - "traefik.http.routers.siteone.entrypoints=websecure"
+      - "traefik.http.routers.siteone.tls.certresolver=myresolver"
+    volumes:
+        - "./Portfolio/:/usr/local/apache2/htdocs/"
+    restart: always
+
+  sitetwo:
+    image: "httpd:latest"
+    container_name: sitetwo
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sitetwo.rule=Host(`stitch.rocks`,`www.stitch.rocks`)"
+      - "traefik.http.routers.sitetwo.entrypoints=websecure"
+      - "traefik.http.routers.sitetwo.tls.certresolver=myresolver"
+    volumes:
+        - "./Portfolio/:/usr/local/apache2/htdocs/"
+    restart: always
